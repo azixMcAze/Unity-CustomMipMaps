@@ -30,6 +30,29 @@ public class TestTextureIporter : AssetPostprocessor {
 		if (ShouldImportAsset(assetPath))
 		{
 			m_importing = true;
+
+			string pattern = GetMipmapFilenamePattern(assetPath);
+			int m = 1;
+
+			while(true)
+			{
+				string mipPath = string.Format(pattern, m);
+				m++;
+
+				TextureImporter importer = (TextureImporter)TextureImporter.GetAtPath(mipPath);
+				if(importer != null)
+				{
+					importer.mipmapEnabled = true;
+					importer.isReadable = true;
+					importer.SaveAndReimport();
+					continue;
+				}
+				else
+				{
+					break;
+				}
+			}
+
 			TextureImporter textureImporter  = (TextureImporter)assetImporter;
 			m_isReadable = textureImporter.isReadable;
 			textureImporter.isReadable = true;
