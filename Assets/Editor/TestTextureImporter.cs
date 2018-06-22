@@ -6,6 +6,7 @@ using System.IO;
 
 public class TestTextureIporter : AssetPostprocessor {
 	bool m_isReadable;
+	bool m_importing;
 
 	bool ShouldImportAsset(string path)
 	{
@@ -28,6 +29,7 @@ public class TestTextureIporter : AssetPostprocessor {
 	{
 		if (ShouldImportAsset(assetPath))
 		{
+			m_importing = true;
 			TextureImporter textureImporter  = (TextureImporter)assetImporter;
 			m_isReadable = textureImporter.isReadable;
 			textureImporter.isReadable = true;
@@ -36,7 +38,7 @@ public class TestTextureIporter : AssetPostprocessor {
 
 	void OnPostprocessTexture(Texture2D texture)
 	{
-		if (ShouldImportAsset(assetPath))
+		if (m_importing)
 		{
 			string pattern = GetMipmapFilenamePattern(assetPath);
 
