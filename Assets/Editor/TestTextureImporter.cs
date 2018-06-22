@@ -9,7 +9,9 @@ public class TestTextureIporter : AssetPostprocessor {
 
 	bool ShouldImportAsset(string path)
 	{
-		return Path.GetFileName(path) == "test.png";
+		string pattern = GetMipmapFilenamePattern(path);
+		string mip1Path = string.Format(pattern, 1);
+		return File.Exists(mip1Path);
 	}
 	
 	string GetMipmapFilenamePattern(string path)
