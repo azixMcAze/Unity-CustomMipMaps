@@ -22,7 +22,7 @@ public class TestTextureIporter : AssetPostprocessor {
 		var extension = Path.GetExtension(path);
 		var directoryName = Path.GetDirectoryName(path);
 
-		return Path.Combine(directoryName, filenameWithoutExtention + ".{0}" + extension);
+		return Path.Combine(directoryName, filenameWithoutExtention + ".mip{0}" + extension);
 	}
 
 	void OnPreprocessTexture()
