@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using System.Text.RegularExpressions;
 
 public class TestTextureIporter : AssetPostprocessor {
 	bool m_isReadable;
@@ -27,6 +28,21 @@ public class TestTextureIporter : AssetPostprocessor {
 
 	void OnPreprocessTexture()
 	{
+		string extension = Path.GetExtension(assetPath);
+		string filenameWithoutExtention = Path.GetFileNameWithoutExtension(assetPath);
+		var match = Regex.Match(filenameWithoutExtention, @".mip(\d)+$");
+
+		if(match.Success)
+		{
+			string filenameWithoutMip = filenameWithoutExtention.Substring(0, match.Index);
+			string directoryName = Path.GetDirectoryName(assetPath);
+			string mip0Path = Path.Combine(directoryName, filenameWithoutMip + extension);
+
+			TextureImporter importer = (TextureImporter)TextureImporter.GetAtPath(mip0Path);
+			if(importer != null)
+				importer.SaveAndReimport();
+		}
+
 		if (ShouldImportAsset(assetPath))
 		{
 			m_importing = true;
