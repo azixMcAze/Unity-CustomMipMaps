@@ -50,6 +50,8 @@ public class TestTextureIporter : AssetPostprocessor {
 			string pattern = GetMipmapFilenamePattern(assetPath);
 			int m = 1;
 
+			bool reimport = false;
+
 			while(true)
 			{
 				string mipPath = string.Format(pattern, m);
@@ -58,9 +60,15 @@ public class TestTextureIporter : AssetPostprocessor {
 				TextureImporter importer = (TextureImporter)TextureImporter.GetAtPath(mipPath);
 				if(importer != null)
 				{
-					importer.mipmapEnabled = true;
-					importer.isReadable = true;
-					importer.SaveAndReimport();
+
+					if(!importer.mipmapEnabled || !importer.isReadable)
+					{
+						importer.mipmapEnabled = true;
+						importer.isReadable = true;
+						importer.SaveAndReimport();
+
+						reimport = true;
+					}
 					continue;
 				}
 				else
@@ -69,6 +77,11 @@ public class TestTextureIporter : AssetPostprocessor {
 				}
 			}
 
+			if(reimport)
+			{
+				m_importing = false;
+				return;
+			}
 			TextureImporter textureImporter  = (TextureImporter)assetImporter;
 			m_isReadable = textureImporter.isReadable;
 			textureImporter.isReadable = true;
