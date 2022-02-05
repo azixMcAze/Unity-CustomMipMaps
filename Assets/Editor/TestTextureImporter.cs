@@ -30,7 +30,7 @@ public class TestTextureIporter : AssetPostprocessor {
 	{
 		string extension = Path.GetExtension(assetPath);
 		string filenameWithoutExtention = Path.GetFileNameWithoutExtension(assetPath);
-		var match = Regex.Match(filenameWithoutExtention, @".mip(\d)+$");
+		var match = Regex.Match(filenameWithoutExtention, @"\.mip(\d{1,2})$");
 
 		if(match.Success)
 		{
